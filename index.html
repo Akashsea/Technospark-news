@@ -1,0 +1,130 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TECHNO SPARK NEWS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-white font-sans">
+    <!-- Header -->
+    <header class="bg-blue-500 text-white p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-3xl font-bold">TECHNO SPARK NEWS</h1>
+            <nav>
+                <ul class="flex space-x-4">
+                    <li><a href="#" class="hover:underline">World</a></li>
+                    <li><a href="#" class="hover:underline">Business</a></li>
+                    <li><a href="#" class="hover:underline">Technology</a></li>
+                    <li><a href="#" class="hover:underline">Sports</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto py-8">
+        <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Article 1 -->
+            <article class="bg-white rounded-lg shadow-md p-4">
+                <div class="p-4">
+                    <span class="text-blue-500 font-semibold">World</span>
+                    <h2 class="text-xl font-bold mt-2">PTIPRNEWS: Crocs Brings the Monsoon Romance Alive with a K-Drama x Bollywood Crossover Featuring Chae Soobin & Siddhant Chaturvedi</h2>
+                    <p class="text-gray-500 text-sm mt-1">Jun 25, 2025</p>
+                    <p class="text-gray-600 mt-2">Set against the backdrop of romantic rain-soaked encounters, the film captures all the visual drama fans love - from shared umbrellas to slow-burn sparks • Brings together Southeast Asia's biggest fandoms in a cinematic crossover that celebrates love, rain, and cultural connection Crocs, a world leader in innovative casual footwear for all, is bringing monsoon flair to the forefront with its most regionally immersive campaign yet, spanning seven key Southeast Asian markets including India, China, Japan, Korea, Thailand, Indonesia and the Philippines. The visually rich and emotionally charged campaign fuses two of Asia's most beloved cultural phenomena: the irresistible emotion of K-dramas and the unmistakable flair of Bollywood, starring young heartthrobs from South Korea and India, Chae Soobin and Siddhant Chaturvedi.</p>
+                </div>
+            </article>
+            <!-- Article 2 -->
+            <article class="bg-white rounded-lg shadow-md p-4">
+                <div class="p-4">
+                    <span class="text-blue-500 font-semibold">Technology</span>
+                    <h2 class="text-xl font-bold mt-2">OpenAI Launches GPT-4o, Breakthrough in Multimodal AI</h2>
+                    <p class="text-gray-500 text-sm mt-1">By James Patel | May 13, 2024</p>
+                    <p class="text-gray-600 mt-2">OpenAI unveiled GPT-4o, a new multimodal model capable of processing and generating text, images, and audio seamlessly. The launch marks a major advancement in AI capabilities, enabling real-time voice conversations and image analysis with unprecedented accuracy. The technology is expected to impact industries from customer service to education, while also reigniting debates on ethical AI deployment. Developers are already integrating GPT-4o into various platforms, with early feedback highlighting its versatility and potential to revolutionize human-computer interaction.</p>
+                </div>
+            </article>
+            <!-- Article 3 -->
+            <article class="bg-white rounded-lg shadow-md p-4">
+                <div class="p-4">
+                    <span class="text-blue-500 font-semibold">Technology</span>
+                    <h2 class="text-xl font-bold mt-2">India’s Chandrayaan-3 Successfully Lands on Moon’s South Pole</h2>
+                    <p class="text-gray-500 text-sm mt-1">By Kavya Rao | August 23, 2023</p>
+                    <p class="text-gray-600 mt-2">India’s Chandrayaan-3 mission achieved a historic milestone by becoming the first spacecraft to successfully land on the Moon’s south polar region. The Vikram lander touched down flawlessly, and the Pragyan rover began exploring the lunar surface, collecting valuable data on water ice presence. This success positions India as a key player in future lunar exploration efforts and potential lunar resource utilization. Scientists are analyzing the data to understand the Moon's composition, which could support future human missions.</p>
+                </div>
+            </article>
+            <!-- Article 4 -->
+            <article class="bg-white rounded-lg shadow-md p-4">
+                <div class="p-4">
+                    <span class="text-blue-500 font-semibold">Sports</span>
+                    <h2 class="text-xl font-bold mt-2">Historic Victory in Global Tournament</h2>
+                    <p class="text-gray-600 mt-2">The underdog team clinched the title in a dramatic finish during the global tournament held last weekend. Facing a formidable opponent in the finals, the team staged a remarkable comeback in the final minutes, securing a victory that stunned fans worldwide. This win marks their first championship in over a decade, sparking celebrations across their home country. Coaches and players attribute the success to rigorous training and unwavering team spirit, setting the stage for an exciting future in international competitions.</p>
+                </div>
+            </article>
+            <!-- Article 5 -->
+            <article class="bg-white rounded-lg shadow-md p-4">
+                <div class="p-4">
+                    <span class="text-blue-500 font-semibold">Technology</span>
+                    <h2 class="text-xl font-bold mt-2">AI-Generated Photo Wins Top Photography Award, Fooling the Judges</h2>
+                    <p class="text-gray-500 text-sm mt-1">By Sofia Grant | April 2023</p>
+                    <p class="text-gray-600 mt-2">In a bizarre turn of events at the prestigious Sony World Photography Awards, a German artist, Boris Eldagsen, submitted an AI-generated image titled Pseudomnesia: The Electrician — and it won first prize in the creative category. The image, a haunting black-and-white portrait, fooled expert judges who had no idea it wasn’t shot with a camera. Eldagsen later refused the prize, revealing he used AI to highlight how unprepared the art world is for artificial intelligence. The incident sparked a heated global debate about authenticity, copyright, and the future of photography.</p>
+                </div>
+            </article>
+            <!-- Article 6 -->
+            <article class="bg-white rounded-lg shadow-md p-4">
+                <div class="p-4">
+                    <span class="text-blue-500 font-semibold">Sports</span>
+                    <h2 class="text-xl font-bold mt-2">Man Runs Entire Marathon in Jeans and Crocs, Sets World Record</h2>
+                    <p class="text-gray-500 text-sm mt-1">By Laura Chen | October 2023</p>
+                    <p class="text-gray-600 mt-2">Michael Goldstein, a 34-year-old runner from the U.S., completed the Chicago Marathon wearing denim jeans and classic Crocs — and not only finished, but set an unofficial world record for the fastest marathon run in that unusual attire. Clocking in at 3 hours 48 minutes, Goldstein said he wanted to prove comfort is subjective. Spectators cheered as he crossed the finish line, and photos of his outfit quickly went viral. Experts say running a full marathon in Crocs could increase risk of injury, but Goldstein reported no pain and declared himself “ready for next year.”</p>
+                </div>
+            </article>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-blue-500 text-white p-4">
+        <div class="container mx-auto text-center">
+            <p>© 2025 TECHNO SPARK NEWS. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
